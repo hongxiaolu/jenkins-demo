@@ -1,8 +1,34 @@
-redis:
-  scale: 1
-pyapp:
-  scale: 2
-pyapplb:
-  scale: 1
-  load_balancer_config:
-    name: pyapplb config
+version: '2'
+services:
+  web:
+    scale: 1
+    start_on_create: true
+    health_check:
+      response_timeout: 2000
+      healthy_threshold: 2
+      port: 80
+      unhealthy_threshold: 3
+      initializing_timeout: 60000
+      interval: 2000
+      strategy: recreate
+      reinitializing_timeout: 60000
+  lb:
+    scale: 1
+    start_on_create: true
+    lb_config:
+      certs: []
+      port_rules:
+      - path: ''
+        priority: 1
+        protocol: http
+        service: web
+        source_port: 8989
+        target_port: 80
+    health_check:
+      response_timeout: 2000
+      healthy_threshold: 2
+      port: 42
+      unhealthy_threshold: 3
+      initializing_timeout: 60000
+      interval: 2000
+      reinitializing_timeout: 60000
