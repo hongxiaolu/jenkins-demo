@@ -1,13 +1,13 @@
 version: '2'
 services:
   web:
-    image: nginx:$$BUILD_NUMBER$$
+    image: $$REGISTRY$$/$$PROJECT$$/$$JOB_NAME$$:$$BUILD_TAG$$
     stdin_open: true
     tty: true
     labels:
       io.rancher.container.pull_image: always
   lb:
-    image: rancher/lb-service-haproxy:v0.7.15
+    image: rancher/lb-service-haproxy:${LB_TAG}
     ports:
     - 8989:8989/tcp
     labels:
