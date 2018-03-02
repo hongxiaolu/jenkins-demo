@@ -9,9 +9,13 @@ STACKS=${STACKS}
 REGISTRY=${REGISTRY}
 PROJECT=${PROJECT}
 LB_TAG=${LB_TAG}
+IMAGE_NAME=${IMAGE_NAME}
+
+DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME}
+DOCKERHUB_PASSWORD=${DOCKERHUB_PASSWORD}
 
 
-cd ${JOB_NAME}
+cd ${WORKSPACE}
 
 # Get new tags from remote  
 git fetch --tags
@@ -20,8 +24,9 @@ BUILD_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
 
 cd ${WORKSPACE}/src
 
-docker build -t ${REGISTRY}/${PROJECT}/${JOB_NAME}:${BUILD_TAG} .
-docker push ${REGISTRY}/${PROJECT}/${JOB_NAME}:${BUILD_TAG} 
+docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
+docker build -t ${REGISTRY}/${PROJECT}/${IMAGE_NAME}:${BUILD_TAG} .
+docker push ${REGISTRY}/${PROJECT}/${IMAGE_NAME}:${BUILD_TAG} 
 
 cd ${WORKSPACE}/test-build
 
